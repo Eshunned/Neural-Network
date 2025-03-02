@@ -1,0 +1,23 @@
+#ifndef EMOTIONDETECTOR_H
+#define EMOTIONDETECTOR_H
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/dnn.hpp>
+#include <iostream>
+#include <vector>
+#include <string>
+
+class EmotionDetector {
+private:
+    cv::dnn::Net model;
+    cv::CascadeClassifier faceCascade;
+    std::vector<std::string> emotions;
+
+public:
+    EmotionDetector(const std::string& modelPath, const std::string& cascadePath);
+    void processFrame(cv::Mat& frame);
+    void run();
+    std::string predictEmotion(cv::Mat& face);
+};
+
+#endif // EMOTIONDETECTOR_H
