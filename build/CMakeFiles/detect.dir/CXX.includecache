@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspaces/Neural-Network/src/detect.cpp
+face_detector.h
+/workspaces/Neural-Network/src/face_detector.h
+neural_network.h
+/workspaces/Neural-Network/src/neural_network.h
+iostream
+-
+vector
+-
+fstream
+-
+
+/workspaces/Neural-Network/src/face_detector.h
+vector
+-
+iostream
+-
+
+/workspaces/Neural-Network/src/neural_network.h
+vector
+-
+cmath
+-
+fstream
+-
+iostream
+-
+

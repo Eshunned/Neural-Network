@@ -1,0 +1,5 @@
+/workspaces/Neural-Network/build/CMakeFiles/rebuild_cache.dir
+/workspaces/Neural-Network/build/CMakeFiles/edit_cache.dir
+/workspaces/Neural-Network/build/CMakeFiles/detect.dir
+/workspaces/Neural-Network/build/CMakeFiles/train.dir
+/workspaces/Neural-Network/build/CMakeFiles/preprocess.dir

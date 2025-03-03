@@ -1,33 +1,81 @@
 #include <iostream>
-#include <opencv2/opencv.hpp>
+#include <vector>
+#include <fstream>
+#include <algorithm> // Required for std::max_element
+#include <chrono>
+#include <thread>
+#include "face_detector.h"
+#include "neural_network.h"
 
-void detectEmotion(cv::Mat& frame) {
-    cv::CascadeClassifier faceCascade;
-    faceCascade.load("haarcascade_frontalface_default.xml");
+#ifdef USE_WEBCAM
+    #include <opencv2/opencv.hpp>  // Only used if running locally with OpenCV
+#endif
 
-    std::vector<cv::Rect> faces;
-    cv::Mat gray;
-    cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
-    faceCascade.detectMultiScale(gray, faces);
-
-    for (const auto& face : faces) {
-        cv::rectangle(frame, face, cv::Scalar(255, 0, 0), 2);
-        cv::putText(frame, "Happy", cv::Point(face.x, face.y - 10),
-                    cv::FONT_HERSHEY_SIMPLEX, 0.7, cv::Scalar(0, 255, 0), 2);
+// Simulate camera capture for Codespaces
+void captureImage(std::vector<std::vector<int>>& image) {
+    for (int i = 0; i < 48; i++) {
+        std::vector<int> row;
+        for (int j = 0; j < 48; j++) {
+            row.push_back(rand() % 256); // Random grayscale pixels
+        }
+        image.push_back(row);
     }
 }
 
 int main() {
-    cv::VideoCapture cap(0);
-    if (!cap.isOpened()) return -1;
+    FaceDetector detector;
+    NeuralNetwork model(48 * 48, 7);
+    model.loadWeights("../models/weights.txt");
+
+    std::vector<std::string> emotionLabels = {
+        "Angry", "Disgust", "Fear", "Happy", "Neutral", "Sad", "Surprise"
+    };
 
     while (true) {
-        cv::Mat frame;
-        cap >> frame;
-        detectEmotion(frame);
+        std::vector<std::vector<int>> frame;
 
-        cv::imshow("Emotion Detector", frame);
-        if (cv::waitKey(10) == 'q') break;
+        #ifdef USE_WEBCAM
+            // Capture from real webcam (only if running locally)
+            cv::VideoCapture cap(0);
+            if (!cap.isOpened()) {
+                std::cerr << "Error: Cannot open webcam!\n";
+                return -1;
+            }
+
+            cv::Mat img;
+            cap >> img; // Capture frame
+
+            // Convert image to grayscale manually
+            std::vector<std::vector<int>> grayscaleImage(48, std::vector<int>(48, 0));
+            for (int i = 0; i < 48; i++) {
+                for (int j = 0; j < 48; j++) {
+                    int pixel = (img.at<cv::Vec3b>(i, j)[0] + img.at<cv::Vec3b>(i, j)[1] + img.at<cv::Vec3b>(i, j)[2]) / 3;
+                    grayscaleImage[i][j] = pixel;
+                }
+            }
+            frame = grayscaleImage;
+        #else
+            // Simulate webcam image (for Codespaces)
+            captureImage(frame);
+        #endif
+
+        std::vector<std::vector<int>> faces = detector.detectFaces(frame);
+
+        for (const auto& face : faces) {
+            std::vector<double> input;
+            for (int i = face[0]; i < face[0] + face[2]; ++i) {
+                for (int j = face[1]; j < face[1] + face[3]; ++j) {
+                    input.push_back(frame[i][j] / 255.0); // Normalize
+                }
+            }
+
+            auto result = model.forward(input);
+            int emotionIndex = std::distance(result.begin(), std::max_element(result.begin(), result.end()));
+
+            std::cout << "Detected Emotion: " << emotionLabels[emotionIndex] << std::endl;
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Reduce CPU usage
     }
 
     return 0;
