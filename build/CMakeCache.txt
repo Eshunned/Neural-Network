@@ -145,7 +145,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=EmotionDetector
+CMAKE_PROJECT_NAME:STATIC=FaceEmotionDetection
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -210,10 +210,10 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Value Computed by CMake
-EmotionDetector_BINARY_DIR:STATIC=/workspaces/Neural-Network/build
+FaceEmotionDetection_BINARY_DIR:STATIC=/workspaces/Neural-Network/build
 
 //Value Computed by CMake
-EmotionDetector_SOURCE_DIR:STATIC=/workspaces/Neural-Network
+FaceEmotionDetection_SOURCE_DIR:STATIC=/workspaces/Neural-Network
 
 //The directory containing a CMake configuration file for OpenCV.
 OpenCV_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/opencv4

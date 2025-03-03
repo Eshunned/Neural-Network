@@ -1,4 +1,0 @@
-[Sun Mar  2 17:04:49 2025
-] Logger initialized.
-[Sun Mar  2 17:04:49 2025
-] Initializing EmotionDetector...

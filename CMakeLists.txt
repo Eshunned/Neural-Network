@@ -1,14 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
-project(EmotionDetector)
-
+project(FaceEmotionDetection)
 find_package(OpenCV REQUIRED)
-
-include_directories(include)
-
-add_executable(Neural-Network 
-    src/main.cpp 
-    src/EmotionDetector.cpp 
-    src/Logger.cpp
-)
-
-target_link_libraries(Neural-Network ${OpenCV_LIBS})
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_executable(preprocess src/preprocess.cpp)
+add_executable(train src/train.cpp)
+add_executable(detect src/detect.cpp)
+target_link_libraries(preprocess ${OpenCV_LIBS})
+target_link_libraries(train ${OpenCV_LIBS})
+target_link_libraries(detect ${OpenCV_LIBS})
